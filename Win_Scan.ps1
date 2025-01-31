@@ -13,6 +13,10 @@ function Show-ComputerInfo {
     $portasTCP = (Get-NetTCPConnection -State Listen).Count
     $portasUDP = (Get-NetUDPEndpoint).Count
 
+    # Lista de portas potencialmente perigosas
+    $portasPerigosas = @(21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 445, 3389, 8080)
+    $portasAbertasPerigosas = Get-NetTCPConnection -State Listen | Where-Object { $portasPerigosas -contains $_.LocalPort } | Select-Object LocalPort
+
     # Obtém informações sobre o sistema operacional
     $sistemaOperacional = Get-CimInstance -ClassName Win32_OperatingSystem | Select-Object -ExpandProperty Caption
 
@@ -28,26 +32,72 @@ function Show-ComputerInfo {
     $espacoTotalGB = [math]::Round($disco.Size / 1GB, 2)
     $espacoLivreGB = [math]::Round($disco.FreeSpace / 1GB, 2)
 
+    # Obtém informações sobre a CPU
+    $cpu = Get-CimInstance -ClassName Win32_Processor | Select-Object -ExpandProperty Name
+
     # Obtém a data e hora da última inicialização do sistema
     $ultimaInicializacao = (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime
 
+    # Verifica se o Firewall está ativo
+    $firewallStatus = (Get-NetFirewallProfile | Where-Object { $_.Enabled -eq $true }).Count -gt 0
+
+    # Verifica se o Windows Update está configurado para atualizações automáticas
+    $updateStatus = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update").AUOptions
+
+    # Verifica se o antivírus está instalado e ativo
+    $antivirusStatus = (Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct).productState -ne $null
+
+    # Verifica se o BitLocker está ativado
+    $bitlockerStatus = (Get-BitLockerVolume -MountPoint "C:").ProtectionStatus -eq "On"
+
+    # Verifica se o UAC (Controle de Conta de Usuário) está ativado
+    $uacStatus = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System").EnableLUA -eq 1
+
     # Exibe as informações
     Write-Host "`n=== Informações do Computador ===" -ForegroundColor Cyan
+    Write-Host "`n[Usuário]" -ForegroundColor Yellow
     Write-Host "Usuário atual: $usuario"
+
+    Write-Host "`n[Rede]" -ForegroundColor Yellow
     Write-Host "Nome do computador: $nomeComputador"
     Write-Host "Endereço IP: $ip"
+    Write-Host "Portas TCP abertas: $portasTCP"
+    Write-Host "Portas UDP abertas: $portasUDP"
+    if ($portasAbertasPerigosas) {
+        Write-Host "Portas potencialmente perigosas abertas: " -ForegroundColor Red -NoNewline
+        Write-Host ($portasAbertasPerigosas.LocalPort -join ", ") -ForegroundColor Red
+    } else {
+        Write-Host "Portas potencialmente perigosas abertas: Nenhuma" -ForegroundColor Green
+    }
+
+    Write-Host "`n[Sistema]" -ForegroundColor Yellow
     Write-Host "Sistema Operacional: $sistemaOperacional"
     Write-Host "Quantidade de usuários no sistema: $usuarios"
+    Write-Host "Última inicialização do sistema: $ultimaInicializacao"
+
+    Write-Host "`n[Hardware]" -ForegroundColor Yellow
+    Write-Host "Processador (CPU): $cpu"
     Write-Host "Memória RAM total: $memoriaRAMGB GB"
     Write-Host "Espaço em disco (C:):"
     Write-Host "  - Total: $espacoTotalGB GB"
     Write-Host "  - Livre: $espacoLivreGB GB"
-    Write-Host "Portas TCP abertas: $portasTCP"
-    Write-Host "Portas UDP abertas: $portasUDP"
-    Write-Host "Última inicialização do sistema: $ultimaInicializacao"
-    Write-Host "===============================`n"
 
-    Write-Host "Pressione qualquer tecla para continuar..."
+    Write-Host "`n[Segurança]" -ForegroundColor Yellow
+    Write-Host "Firewall ativo: $(if ($firewallStatus) { 'Sim' } else { 'Não' })"
+    Write-Host "Atualizações automáticas: $(if ($updateStatus -eq 4) { 'Sim' } else { 'Não' })"
+    Write-Host "Antivírus instalado e ativo: $(if ($antivirusStatus) { 'Sim' } else { 'Não' })"
+    Write-Host "BitLocker ativado: $(if ($bitlockerStatus) { 'Sim' } else { 'Não' })"
+    Write-Host "UAC (Controle de Conta de Usuário) ativado: $(if ($uacStatus) { 'Sim' } else { 'Não' })"
+    Write-Host "`n===============================`n" -ForegroundColor Cyan
+    # Solicitar ao usuário se deseja obter informações mais detalhadas
+    $detalhes = Read-Host "`n`nVocê deseja obter informações mais detalhadas? (1/0)"
+
+    # Verificar a resposta do usuário
+    if ($detalhes -eq "1") {
+        Get-ComputerInfo | Format-List * 
+    }
+
+    Write-Host "`nPressione qualquer tecla para continuar..." -ForegroundColor Red
     $null = Read-Host
 
     # Limpa o terminal
@@ -140,6 +190,7 @@ function Show-UserInfo {
     # Limpa o terminal
     Clear-Host
 }
+
 function Show-TCPPorts {
     Write-Host "`n=== Portas TCP Abertas ===" -ForegroundColor Green
 
@@ -268,7 +319,6 @@ function Show-Apps {
     else {
         Write-Host "Opção inválida. Voltando ao menu inicial." -ForegroundColor Red
     }
-
     Write-Host "`nPressione qualquer tecla para continuar..."
     $null = Read-Host
 
@@ -280,15 +330,22 @@ function Show-Apps {
 
 # Menu principal
 while ($true) {
-    Write-Host "`n=== Menu Principal ===" -ForegroundColor Magenta
-    Write-Host "1. Mostrar informações do computador"
-    Write-Host "2. Informações avançadas de Usuarios do Sistema"
-    Write-Host "3. Filtrar e listar todas as portas TCP abertas"
-    Write-Host "4. Filtrar e listar todas as portas UDP abertas"
-    Write-Host "5. Listar todos os aplicativos do computador"
-    Write-Host "0. Sair"
-    Write-Host "======================"
-    $opcao = Read-Host "Escolha uma opção (1-5)"
+    Write-Host "`n╔══════════════════════════════════════╗" -ForegroundColor Green
+    Write-Host "║          === Menu Principal ===      ║" -ForegroundColor Green
+    Write-Host "╠══════════════════════════════════════╣" -ForegroundColor Green
+    Write-Host "║ 1. Mostrar informações do computador ║" -ForegroundColor Green
+    Write-Host "║                                      ║" -ForegroundColor Green
+    Write-Host "║ 2. Informações avançadas de Usuários ║" -ForegroundColor Green
+    Write-Host "║                                      ║" -ForegroundColor Green
+    Write-Host "║ 3. Listar portas TCP abertas         ║" -ForegroundColor Green
+    Write-Host "║                                      ║" -ForegroundColor Green
+    Write-Host "║ 4. Listar portas UDP abertas         ║" -ForegroundColor Green
+    Write-Host "║                                      ║" -ForegroundColor Green
+    Write-Host "║ 5. Listar aplicativos em USO         ║" -ForegroundColor Green
+    Write-Host "║                                      ║" -ForegroundColor Green
+    Write-Host "║ 0. Sair                              ║" -ForegroundColor Green
+    Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Green
+    $opcao = Read-Host "`nEscolha uma opção (1-0)" 
 
     if ($opcao -eq 1) {
         # Mostrar informações do computador
@@ -312,7 +369,9 @@ while ($true) {
     }
     elseif ($opcao -eq 0) {
         # Sair do script
-        Write-Host "Saindo..." -ForegroundColor Red
+        Write-Host "`n╔══════════════════════════════════════╗" -ForegroundColor Red
+        Write-Host "║            Saindo...                 ║" -ForegroundColor Red
+        Write-Host "╚══════════════════════════════════════╝" -ForegroundColor Red
         break
     }
     else {
