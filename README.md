@@ -1,6 +1,6 @@
 # Guia de Comandos Básicos do PowerShell
 
-Este guia contém comandos básicos do PowerShell para iniciantes. Use-os para navegar, gerenciar arquivos e executar tarefas simples no terminal.
+Este guia contém comandos básicos do PowerShell para iniciantes. Use-os para navegar, gerenciar arquivos, executar tarefas simples e iniciar a programação com scripts.
 
 ----
 
@@ -85,34 +85,205 @@ Exclui um arquivo.
 del arquivo.txt
 ```
 
+#### Criar Arquivo
+Cria um novo arquivo vazio.  
+**Exemplo:**
+```powershell
+New-Item -Path "novo_arquivo.txt" -ItemType File
+```
+
+#### Criar Arquivo com Conteúdo
+Cria um arquivo e adiciona um texto dentro dele.  
+**Exemplo:**
+```powershell
+Set-Content -Path "novo_arquivo.txt" -Value "Este é um arquivo criado via PowerShell."
+```
+
+#### Adicionar Conteúdo a um Arquivo Existente
+Adiciona texto ao final de um arquivo existente.  
+**Exemplo:**
+```powershell
+Add-Content -Path "novo_arquivo.txt" -Value "Nova linha adicionada."
+```
+
+#### Ler o Conteúdo de um Arquivo
+Exibe o conteúdo de um arquivo no console.  
+**Exemplo:**
+```powershell
+Get-Content -Path "novo_arquivo.txt"
+```
+
 ----
 
-## Outros Comandos Úteis
+## Estruturas de Controle
 
-#### cls (Clear Screen)
-Limpa a tela do console.  
+### Loop `for`
+Executa um bloco de código várias vezes.  
 **Exemplo:**
 ```powershell
-cls
+for ($i=1; $i -le 5; $i++) {
+    Write-Host "Número: $i"
+}
 ```
 
-#### echo
-Exibe uma mensagem no console.  
+### Loop `while`
+Executa um bloco de código enquanto uma condição for verdadeira.  
 **Exemplo:**
 ```powershell
-echo Olá, Mundo!
+$i = 1
+while ($i -le 5) {
+    Write-Host "Contador: $i"
+    $i++
+}
 ```
 
-#### Get-Help
-Mostra a ajuda para um comando específico.  
+### Loop `foreach`
+Percorre cada item de uma lista.  
 **Exemplo:**
 ```powershell
-Get-Help cd
+$nomes = @("Alice", "Bob", "Carlos")
+foreach ($nome in $nomes) {
+    Write-Host "Nome: $nome"
+}
+```
+
+----
+
+## Condicionais
+
+### If-Else
+Executa comandos diferentes com base em uma condição.  
+**Exemplo:**
+```powershell
+$idade = 18
+if ($idade -ge 18) {
+    Write-Host "Você é maior de idade."
+} else {
+    Write-Host "Você é menor de idade."
+}
+```
+
+### Switch
+Permite testar múltiplas condições.  
+**Exemplo:**
+```powershell
+$opcao = "B"
+switch ($opcao) {
+    "A" { Write-Host "Você escolheu A" }
+    "B" { Write-Host "Você escolheu B" }
+    "C" { Write-Host "Você escolheu C" }
+    default { Write-Host "Opção inválida" }
+}
+```
+
+----
+
+## Criando e Executando Scripts PowerShell
+
+#### Criar um Script PowerShell
+Crie um novo arquivo `.ps1` para armazenar comandos.  
+**Exemplo:**
+```powershell
+New-Item -Path "meu_script.ps1" -ItemType File
+```
+
+Abra o arquivo com um editor de texto e adicione comandos como:
+```powershell
+Write-Host "Olá, Mundo!"
+```
+
+#### Executar um Script PowerShell
+Execute um script com:  
+```powershell
+.\meu_script.ps1
+```
+
+#### Permitir a Execução de Scripts
+Se scripts não estiverem sendo executados, use:  
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+----
+
+## Trabalhando com Variáveis
+
+#### Declarar e Atribuir Valor a uma Variável
+**Exemplo:**
+```powershell
+$nome = "João"
+$idade = 25
+Write-Host "Nome: $nome, Idade: $idade"
+```
+
+#### Variáveis Numéricas
+```powershell
+$a = 10
+$b = 20
+$soma = $a + $b
+Write-Host "A soma de $a e $b é $soma"
+```
+
+#### Arrays
+Criação de uma lista de valores.  
+**Exemplo:**
+```powershell
+$frutas = @("Maçã", "Banana", "Laranja")
+Write-Host "Primeira fruta: $frutas[0]"
+```
+
+----
+
+## Funções
+
+Criação de uma função personalizada.  
+**Exemplo:**
+```powershell
+function Saudacao {
+    param ($nome)
+    Write-Host "Olá, $nome!"
+}
+Saudacao "Carlos"
+```
+
+----
+
+## Trabalhando com Processos
+
+#### Listar Processos em Execução
+```powershell
+Get-Process
+```
+
+#### Finalizar um Processo
+```powershell
+Stop-Process -Name "notepad" -Force
+```
+
+----
+
+## Trabalhando com Serviços
+
+#### Listar Serviços em Execução
+```powershell
+Get-Service
+```
+
+#### Iniciar um Serviço
+```powershell
+Start-Service -Name "wuauserv"
+```
+
+#### Parar um Serviço
+```powershell
+Stop-Service -Name "wuauserv"
 ```
 
 ----
 
 ## Como Usar
-1. Abra o PowerShell no Windows (pressione Win + X e selecione "Windows PowerShell").
+1. Abra o PowerShell no Windows (pressione `Win + X` e selecione "Windows PowerShell").
 2. Digite os comandos conforme necessário.
-3. Use `Get-Help <comando>` para obter mais informações sobre qualquer comando.
+3. Crie scripts `.ps1` para automatizar tarefas.
+4. Use `Get-Help <comando>` para obter mais informações sobre qualquer comando.
+
