@@ -37,10 +37,10 @@ function Show-ComputerInfo {
     $uacStatus = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System").EnableLUA -eq 1
 
     Write-Host "`n=== Informacoes do Computador ===" -ForegroundColor Cyan
-    Write-Host "`n[Usuario]" -ForegroundColor Yellow
+    Write-Host "`n      [Usuario]" -ForegroundColor Yellow
     Write-Host "Usuario atual: $usuario"
 
-    Write-Host "`n[Rede]" -ForegroundColor Yellow
+    Write-Host "`n       [Rede]" -ForegroundColor Yellow
     Write-Host "Nome do computador: $nomeComputador"
     Write-Host "Endereço IP: $ip"
     Write-Host "Portas TCP abertas: $portasTCP"
@@ -52,19 +52,19 @@ function Show-ComputerInfo {
         Write-Host "Portas potencialmente perigosas abertas: Nenhuma" -ForegroundColor Green
     }
 
-    Write-Host "`n[Sistema]" -ForegroundColor Yellow
+    Write-Host "`n       [Sistema]" -ForegroundColor Yellow
     Write-Host "Sistema Operacional: $sistemaOperacional"
     Write-Host "Quantidade de usuarios no sistema: $usuarios"
     Write-Host "Ultima inicializacao do sistema: $ultimaInicializacao"
 
-    Write-Host "`n[Hardware]" -ForegroundColor Yellow
+    Write-Host "`n      [Hardware]" -ForegroundColor Yellow
     Write-Host "Processador (CPU): $cpu"
     Write-Host "Memória RAM total: $memoriaRAMGB GB"
     Write-Host "Espaco em disco (C:):"
     Write-Host "  - Total: $espacoTotalGB GB"
     Write-Host "  - Livre: $espacoLivreGB GB"
 
-    Write-Host "`n[Segurança]" -ForegroundColor Yellow
+    Write-Host "`n      [Segurança]" -ForegroundColor Yellow
     Write-Host "Firewall ativo: $(if ($firewallStatus) { 'Sim' } else { 'Não' })"
     Write-Host "Atualizacoes automaticas: $(if ($updateStatus -eq 4) { 'Sim' } else { 'Não' })"
     Write-Host "Antivirus instalado e ativo: $(if ($antivirusStatus) { 'Sim' } else { 'Não' })"
@@ -85,7 +85,6 @@ function Show-ComputerInfo {
 }
 
 function Show-UserInfo {
-    # Função para exibir o menu de opções
     function Show-Menu {
         Clear-Host
        Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
@@ -339,10 +338,152 @@ function Show-Apps {
 
     Clear-Host
 
-    Write-Host "=========================`n"
 }
 
-# Menu principal
+function Wmap {
+    function Show-Menu {
+        Clear-Host
+        Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║                                 === WMap ===                                 ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║                 1. Pingar IP                                                 ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║                 2. Criar Lista de IP                                         ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║                 3. Pingar Maq da rede                                        ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║                 4. Pingar Porta Espcifica ( S/ rastros)                      ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║                 0. Menu Principal                                            ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "╚══════════════════════════════════════════════════════════════════════════════╝`n`n" -ForegroundColor Red
+    }
+
+    function Pingar-Ip {
+        Write-Host "`n"
+        $ip = Read-Host "Digite o IP"
+        Write-Host "`nEfetuando ping no host: $ip"
+        $pingResult = Test-Connection -ComputerName $ip -Count 3 -Quiet
+        if ($pingResult) {
+            Write-Host "`n               - - RED TEAM - - " -ForegroundColor Red
+            ping -n 5 $ip | Select-String "bytes=32"
+            Write-Host "`n`nO host: $ip :ONLINE" -ForegroundColor Green
+        } else {
+            ping -n 5 $ip | Select-String "bytes=32"
+            Write-Host "`n`nFalha ao pingar o host: $ip :OFFLINE" -ForegroundColor Red
+        }
+    }
+
+    function Criar-Lista {
+        Write-Host "`n"
+        $baseIP = Read-Host "Digite a parte inicial do IP (Ex: 192.168.10.)"
+    
+        if (-not $baseIP.EndsWith(".")) {
+            Write-Host "Formato inválido. Certifique-se de incluir o ponto final (Ex: 192.168.10.)" -ForegroundColor Red
+            return
+        }
+
+        Write-Host "`nGerando lista de IPs..." -ForegroundColor Yellow
+
+        foreach ($i in 1..254) {
+            $ip = "$baseIP$i"
+            Write-Host $ip
+        }
+
+        Write-Host "`nLista de IPs gerada com sucesso!" -ForegroundColor Green
+        }
+
+    function Pingar-Ip-Rede {
+        Write-Host "`n"
+        $baseIP = Read-Host "Digite a parte inicial do IP (Ex: 192.168.10.)"
+
+        # Verifica se o usuário digitou um valor válido
+        if (-not $baseIP.EndsWith(".")) {
+            Write-Host "Formato inválido. Certifique-se de incluir o ponto final (Ex: 192.168.10.)" -ForegroundColor Red
+            return
+        }
+
+        Write-Host "`nPingando endereços de 1 a 254 do IP $baseIP ..." -ForegroundColor Yellow
+
+        # Loop para pingar cada IP na rede
+        foreach ($ip in 1..254) {
+            $fullIP = "$baseIP$ip" # Concatena a base do IP com o número atual
+            Write-Host "Pingando $fullIP..." -ForegroundColor Cyan
+            $result = ping -n 1 $fullIP | Select-String "bytes=32"
+
+            # Exibe o resultado do ping
+            if ($result) {
+                Write-Host "$fullIP respondeu ao ping." -ForegroundColor Green
+            } else {
+                Write-Host "$fullIP não respondeu ao ping." -ForegroundColor Red
+            }
+        }
+
+        Write-Host "`nPing concluído!" -ForegroundColor Yellow
+    }
+
+    function Pingar-Porta-IP {
+        Write-Host "`n"
+        $ip = Read-Host "Digite o IP"
+        $porta = Read-Host "Digite a porta"
+
+        if (-not $ip -or -not $porta) {
+            Write-Host "Dados Inseridos corretamente..." -ForegroundColor Red
+            return
+        }
+
+        # Valida se a porta é um número válido
+        if (-not ($porta -match '^\d+$') -or [int]$porta -lt 1 -or [int]$porta -gt 65535) {
+            Write-Host "`nPorta inválida. A porta deve ser um número entre 1 e 65535." -ForegroundColor Red
+            return
+        }
+
+        Write-Host "`nVerificando a porta $porta no IP $ip..." -ForegroundColor Yellow
+
+        # Testa a conexão com o IP e a porta e obtém detalhes completos
+        $resultado = Test-NetConnection -ComputerName $ip -Port $porta -WarningAction SilentlyContinue
+
+        # Exibe os detalhes da conexão
+        Write-Host "`n=== Detalhes da Conexão ===" -ForegroundColor Cyan
+        Write-Host "ComputerName: $($resultado.ComputerName)" -ForegroundColor Green
+        Write-Host "RemoteAddress: $($resultado.RemoteAddress)" -ForegroundColor Green
+        Write-Host "RemotePort: $($resultado.RemotePort)" -ForegroundColor Green
+        Write-Host "InterfaceAlias: $($resultado.InterfaceAlias)" -ForegroundColor Green
+        Write-Host "SourceAddress: $($resultado.SourceAddress)" -ForegroundColor Green
+        Write-Host "PingReplyDetails (RTT): $($resultado.PingReplyDetails.RoundtripTime) ms" -ForegroundColor Green
+        Write-Host "TcpTestSucceeded: $($resultado.TcpTestSucceeded)" -ForegroundColor Green
+
+        # Resultado do teste de porta
+        if ($resultado.TcpTestSucceeded) {
+            Write-Host "`nPorta $porta está aberta no IP $ip." -ForegroundColor Green
+        } else {
+            Write-Host "`nPorta $porta está fechada no IP $ip." -ForegroundColor Red
+        }
+    }
+
+    do {
+        Show-Menu
+        $choice = Read-Host "Escolha uma opcao (1-0)"
+
+        switch ($choice) {
+            1 { Pingar-Ip }
+            2 { Criar-Lista }
+            3 { Pingar-Ip-Rede }
+            4 { Pingar-Porta-IP }
+            0 { Write-Host "Voltando ao menu principal..." -ForegroundColor Yellow; break }
+            default { Write-Host "Opcao invalida. Tente novamente." -ForegroundColor Red }
+        }
+
+        if ($choice -ne 0) {
+            Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+            $null = Read-Host
+        }
+    } while ($choice -ne 0)
+}
+
 while ($true) {
     Clear-Host
     Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
@@ -361,33 +502,32 @@ while ($true) {
     Write-Host "║                                                                              ║" -ForegroundColor Green
     Write-Host "║                 5. Listar aplicativos em USO                                 ║" -ForegroundColor Green
     Write-Host "║                                                                              ║" -ForegroundColor Green
+    Write-Host "║                 6. WMap                                                      ║" -ForegroundColor Green
+    Write-Host "║                                                                              ║" -ForegroundColor Green
     Write-Host "║                 0. Sair                                                      ║" -ForegroundColor Green
     Write-Host "║                                                                              ║" -ForegroundColor Green
     Write-Host "╚══════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Green
     $opcao = Read-Host "`nEscolha uma opção (1-0)" 
 
     if ($opcao -eq 1) {
-        # Mostrar informações do computador
         Show-ComputerInfo
     }
     elseif ($opcao -eq 2) {
-        # Filtrar e listar portas TCP
         Show-UserInfo
     }
     elseif ($opcao -eq 3) {
-        # Filtrar e listar portas TCP
         Show-TCPPorts
     }
     elseif ($opcao -eq 4) {
-        # Filtrar e listar portas UDP
         Show-UDPPorts
     }
     elseif ($opcao -eq 5) {
-        # Listar e encerrar aplicativos
         Show-Apps
     }
+    elseif ($opcao -eq 6){
+        Wmap
+    }
     elseif ($opcao -eq 0) {
-        # Sair do script
         Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
         Write-Host "║                                  Saindo...                                   ║" -ForegroundColor Red
         Write-Host "╚══════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor Red
@@ -398,9 +538,6 @@ while ($true) {
         Write-Host "`nPressione qualquer tecla para continuar..."
         $null = Read-Host
 
-        # Limpa o terminal
         Clear-Host
-
-        Write-Host "=========================`n"
     }
 }
