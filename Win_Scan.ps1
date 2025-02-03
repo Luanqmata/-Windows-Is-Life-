@@ -87,25 +87,25 @@ function Show-ComputerInfo {
 function Show-UserInfo {
     function Show-Menu {
         Clear-Host
-       Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
-    Write-Host "║                     === Menu de Informacoes de Usuarios ===                  ║" -ForegroundColor Red
-    Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Red
-    Write-Host "║  1. Listar Usuarios                                                          ║" -ForegroundColor Red
-    Write-Host "║                                                                              ║" -ForegroundColor Red
-    Write-Host "║  2. Visualizar Informacoes de um Usuario                                     ║" -ForegroundColor Red
-    Write-Host "║                                                                              ║" -ForegroundColor Red
-    Write-Host "║  3. Exibir Grupos                                                            ║" -ForegroundColor Red
-    Write-Host "║                                                                              ║" -ForegroundColor Red
-    Write-Host "║  4. Criar um Usuario                                                         ║" -ForegroundColor Red
-    Write-Host "║                                                                              ║" -ForegroundColor Red
-    Write-Host "║  5. Escalar Privilegios                                                      ║" -ForegroundColor Red
-    Write-Host "║                                                                              ║" -ForegroundColor Red
-    Write-Host "║  6. Deletar um Usuario                                                       ║" -ForegroundColor Red
-    Write-Host "║                                                                              ║" -ForegroundColor Red
-    Write-Host "║  7. Mostrar Usuarios Logados                                                 ║" -ForegroundColor Red
-    Write-Host "║                                                                              ║" -ForegroundColor Red
-    Write-Host "║  8. Voltar ao menu inicial                                                   ║" -ForegroundColor Red
-    Write-Host "╚══════════════════════════════════════════════════════════════════════════════╝`n`n" -ForegroundColor Red
+        Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
+        Write-Host "║                     === Menu de Informacoes de Usuarios ===                  ║" -ForegroundColor Red
+        Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Red
+        Write-Host "║  1. Listar Usuarios                                                          ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║  2. Visualizar Informacoes de um Usuario                                     ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║  3. Exibir Grupos                                                            ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║  4. Criar um Usuario                                                         ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║  5. Escalar Privilegios                                                      ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║  6. Deletar um Usuario        ( CUIDADO !!!)                                 ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║  7. Mostrar Usuarios Logados                                                 ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║  8. Voltar ao menu inicial                                                   ║" -ForegroundColor Red
+        Write-Host "╚══════════════════════════════════════════════════════════════════════════════╝`n`n" -ForegroundColor Red
     }
 
     # Função para listar usuários
@@ -144,37 +144,151 @@ function Show-UserInfo {
         Write-Host "Usuario $username criado com sucesso!" -ForegroundColor Green
     }
 
-    # Função para adicionar um usuário ao grupo de administradores
-    function Add-UserToAdminGroup {
-        # Lista todos os usuários
-        List-Users
+    function Melhora-Previlegios {  ## FICAR DE OLHO
+        while ($true) {
+            # Exibe o menu de opções
+            Clear-Host
+            Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
+            Write-Host "║                     === Menu de Previlegios Win ===                          ║" -ForegroundColor Red
+            Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Red
+            Write-Host "║  1. Adicionar usuario ao grupo de administradores                            ║" -ForegroundColor Red
+            Write-Host "║                                                                              ║" -ForegroundColor Red
+            Write-Host "║  2. Adicionar usuario a um grupo especifico                                  ║" -ForegroundColor Red
+            Write-Host "║                                                                              ║" -ForegroundColor Red
+            Write-Host "║  3. Adicionar usuario a todos os grupos                                      ║" -ForegroundColor Red
+            Write-Host "║                                                                              ║" -ForegroundColor Red
+            Write-Host "║  4. Adicionar user a grupo de Ass.Global        (Ainda nao funciona)         ║" -ForegroundColor Red
+            Write-Host "║                                                                              ║" -ForegroundColor Red
+            Write-Host "║  5. Sair                                                                     ║" -ForegroundColor Red
+            Write-Host "╚══════════════════════════════════════════════════════════════════════════════╝`n`n" -ForegroundColor Red
+            
+            
+            $opcao = Read-Host "`nEscolha uma opcao (1-5)"
 
-        # Solicita o nome do usuário
-        $username = Read-Host "Digite o nome do usuario que deseja adicionar ao grupo de administradores"
+            switch ($opcao) {
+                1 {
+                    # Opção 1: Adicionar usuário ao grupo de administradores
+                    List-Users
+                    $username = Read-Host "`n`nDigite o nome do usuario que deseja adicionar ao grupo de administradores"
+                    if (-not (UserExists $username)) {
+                        Write-Host "Erro: O usuario '$username' nao existe." -ForegroundColor Red
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                        continue
+                    }
+                    try {
+                        net localgroup Administradores $username /ADD
+                        Write-Host "Usuario '$username' adicionado ao grupo de administradores com sucesso!" -ForegroundColor Green
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                    }
+                    catch {
+                        Write-Host "Erro ao adicionar o usuario '$username' ao grupo de administradores. Certifique-se de que o PowerShell está sendo executado como administrador." -ForegroundColor Red
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                    }
+                }
+                2 {
+                    # Opção 2: Adicionar usuário a um grupo específico
+                    List-Users
 
+                    Write-Host "=== Lista de Grupos ===" -ForegroundColor Green
+                    net localgroup | ForEach-Object { Write-Host $_ }
+                    $username = Read-Host "Digite o nome do usuario que deseja adicionar a um grupo"
+                    if (-not (UserExists $username)) {
+                        Write-Host "Erro: O usuario '$username' nao existe." -ForegroundColor Red
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                        continue
+                    }
+                    $groupname = Read-Host "`n`nDigite o nome do grupo ao qual deseja adicionar o usuario"
+                    try {
+                        net localgroup $groupname $username /ADD
+                        Write-Host "Usuario '$username' adicionado ao grupo '$groupname' com sucesso!" -ForegroundColor Green
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                    }
+                    catch {
+                        Write-Host "Erro ao adicionar o usuario '$username' ao grupo '$groupname'. Certifique-se de que o grupo existe e que o PowerShell está sendo executado como administrador." -ForegroundColor Red
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                    }
+                }
+                3 {
+                    # Opção 3: Adicionar usuário a todos os grupos
+                    List-Users
+                    $username = Read-Host "`n`nDigite o nome do usuario que deseja adicionar a todos os grupos"
+                    if (-not (UserExists $username)) {
+                        Write-Host "Erro: O usuario '$username' nao existe." -ForegroundColor Red
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                        continue
+                    }
+                    try {
+                        $groups = net localgroup | Where-Object { $_ -match "^\*" } | ForEach-Object { $_.TrimStart('*').Trim() }
+                        foreach ($group in $groups) {
+                            net localgroup $group $username /ADD
+                            Write-Host "Usuario '$username' adicionado ao grupo '$group' com sucesso!" -ForegroundColor Green
+                        }
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                    }
+                    catch {
+                        Write-Host "Erro ao adicionar o usuario '$username' a todos os grupos. Certifique-se de que o PowerShell está sendo executado como administrador." -ForegroundColor Red
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                    }
+                }
+                4 {
+                     # Solicita o nome do usuário
+                    $nomeUsuario = Read-Host "Digite o nome do usuário que deseja adicionar ao grupo"
+
+                    # Define o nome do grupo
+                    $nomeGrupo = "Associações de Grupo Global"
+
+                    # Adiciona o usuário ao grupo
+                    try {
+                        Add-ADGroupMember -Identity $nomeGrupo -Members $nomeUsuario
+                        Write-Host "Usuário '$nomeUsuario' adicionado ao grupo '$nomeGrupo' com sucesso!"
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                    } catch {
+                        Write-Host "Erro ao adicionar o usuário ao grupo: $_"
+                        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
+                        $null = Read-Host
+                    }
+                }
+                5 {
+                    # Opção 5: Sair do loop
+                    Write-Host "`nVoltando para menu de Usuarios..." -ForegroundColor Red
+                    return
+                }
+                default {
+                    Write-Host "Opcao invalida. Por favor, escolha uma opcao valida (1-5)." -ForegroundColor Red
+                }
+            }
+        }
+    }
+
+    function UserExists($username) {
         # Verifica se o usuário existe
         $userExists = net user $username 2>&1 | Select-String "O nome da conta poderia não ser encontrado"
-        if ($userExists) {
-            Write-Host "Erro: O usuario '$username' nao existe." -ForegroundColor Red
-            return
-        }
-
-        # Adiciona o usuário ao grupo de administradores
-        try {
-            net localgroup Administradores $username /ADD
-            Write-Host "Usuario '$username' adicionado ao grupo de administradores com sucesso!" -ForegroundColor Green
-        }
-        catch {
-            Write-Host "Erro ao adicionar o usuario '$username' ao grupo de administradores. Certifique-se de que o PowerShell está sendo executado como administrador." -ForegroundColor Red
+        return -not $userExists
     }
-}
 
     # Função para deletar um usuário
     function Delete-User {
         List-Users
         $username = Read-Host "Digite o nome do usuario que deseja deletar"
-        net user $username /DELETE
-        Write-Host "Usuario $username deletado com sucesso!" -ForegroundColor Green
+    
+        $confirm = Read-Host "Voce realmente deseja excluir o usuario '$username'? (s/n)"
+    
+        if ($confirm -eq 's') {
+            net user $username /DELETE
+            Write-Host "Usuario $username deletado com sucesso!" -ForegroundColor Green
+        } else {
+            Write-Host "Operação cancelada." -ForegroundColor Yellow
+        }
     }
 
     # Verifica usuários atualmente logados
@@ -201,7 +315,7 @@ function Show-UserInfo {
             2 { Get-UserInfo }
             3 { Show-Groups }
             4 { Create-User }
-            5 { Add-UserToAdminGroup }
+            5 { Melhora-Previlegios }
             6 { Delete-User }
             7 { Show-LoggedInUsers }
             8 { Write-Host "Saindo..." -ForegroundColor Yellow; break }
