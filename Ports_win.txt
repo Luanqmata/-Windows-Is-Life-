@@ -1,0 +1,58 @@
+21,    # FTP
+    22,    # SSH
+    23,    # Telnet
+    25,    # SMTP
+    53,    # DNS
+    80,    # HTTP
+    110,   # POP3
+    123,   # NTP
+    135,   # RPC
+    137,   # NetBIOS Name Service
+    138,   # NetBIOS Datagram Service
+    139,   # NetBIOS Session Service
+    143,   # IMAP
+    161,   # SNMP
+    162,   # SNMP Trap
+    389,   # LDAP
+    443,   # HTTPS
+    445,   # SMB (Server Message Block)
+    465,   # SMTP over SSL
+    587,   # SMTP (submissão)
+    636,   # LDAP over SSL
+    993,   # IMAP over SSL
+    995,   # POP3 over SSL
+    1025,  # Windows RPC
+    1026,  # Windows RPC
+    1027,  # Windows RPC
+    1028,  # Windows RPC
+    1029,  # Windows RPC
+    1433,  # SQL Server
+    1434,  # SQL Server Monitor
+    1701,  # L2TP
+    1723,  # PPTP
+    1900,  # UPnP
+    3306,  # MySQL
+    3389,  # RDP (Remote Desktop Protocol)
+    4500,  # IPsec NAT Traversal
+    5000,  # UPnP
+    5060,  # SIP
+    5353,  # mDNS
+    5355,  # LLMNR
+    5432,  # PostgreSQL
+    5900,  # VNC
+    5985,  # WinRM HTTP
+    5986,  # WinRM HTTPS
+    6379,  # Redis
+    8080,  # HTTP Alternativo
+    8081,  # HTTP Alternativo
+    8443,  # HTTPS Alternativo
+    8888,  # HTTP Alternativo
+    9000,  # Porta comum para serviços personalizados
+    9090,  # HTTP Alternativo
+    9200,  # Elasticsearch
+    9300,  # Elasticsearch
+    10000, # Webmin
+    11211, # Memcached
+    27017, # MongoDB
+    27018, # MongoDB
+    27019, # MongoDB
