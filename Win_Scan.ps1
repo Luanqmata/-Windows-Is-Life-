@@ -87,7 +87,7 @@ function Show-ComputerInfo {
 function Show-UserInfo {
     function Show-Menu {
         Clear-Host
-        Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
+        Write-Host "`n`n`n`n`n`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
         Write-Host "║                     === Menu de Informacoes de Usuarios ===                  ║" -ForegroundColor Red
         Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Red
         Write-Host "║  1. Listar Usuarios                                                          ║" -ForegroundColor Red
@@ -108,13 +108,11 @@ function Show-UserInfo {
         Write-Host "╚══════════════════════════════════════════════════════════════════════════════╝`n`n" -ForegroundColor Red
     }
 
-    # Função para listar usuários
     function List-Users {
         Write-Host "`n=== Lista de Usuarios ===" -ForegroundColor Green
         net user | ForEach-Object { Write-Host $_ }
     }
 
-    # Função para visualizar informações de um usuário específico
     function Get-UserInfo {
         net user | ForEach-Object { Write-Host $_ }
         $username = Read-Host "`nDigite o nome do usuario"
@@ -122,7 +120,6 @@ function Show-UserInfo {
         net user $username | ForEach-Object { Write-Host $_ }
     }
 
-    # Função para exibir grupos
     function Show-Groups {
         Write-Host "`n=== Lista de Grupos ===" -ForegroundColor Green
         net localgroup | ForEach-Object { Write-Host $_ }
@@ -135,7 +132,6 @@ function Show-UserInfo {
         }
     }
 
-    # Função para criar um usuário
     function Create-User {
         $username = Read-Host "Digite o nome do novo usuario"
         $password = Read-Host "Digite a senha para o novo usuario" -AsSecureString
@@ -146,9 +142,8 @@ function Show-UserInfo {
 
     function Melhora-Previlegios {  ## FICAR DE OLHO
         while ($true) {
-            # Exibe o menu de opções
             Clear-Host
-            Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
+            Write-Host "`n`n`n`n`n`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
             Write-Host "║                     === Menu de Previlegios Win ===                          ║" -ForegroundColor Red
             Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Red
             Write-Host "║  1. Adicionar usuario ao grupo de administradores                            ║" -ForegroundColor Red
@@ -239,7 +234,7 @@ function Show-UserInfo {
                         $null = Read-Host
                     }
                 }
-                4 {
+                4 {  ## FUNÇÃO COM POSSIVEL MELHORIA
                      # Solicita o nome do usuário
                     $nomeUsuario = Read-Host "Digite o nome do usuário que deseja adicionar ao grupo"
 
@@ -269,14 +264,13 @@ function Show-UserInfo {
             }
         }
     }
-
+    ## subfunção da função : Melhora-Previlegios ;
     function UserExists($username) {
         # Verifica se o usuário existe
         $userExists = net user $username 2>&1 | Select-String "O nome da conta poderia não ser encontrado"
         return -not $userExists
     }
 
-    # Função para deletar um usuário
     function Delete-User {
         List-Users
         $username = Read-Host "Digite o nome do usuario que deseja deletar"
@@ -291,7 +285,6 @@ function Show-UserInfo {
         }
     }
 
-    # Verifica usuários atualmente logados
     function Show-LoggedInUsers {
         Write-Host "`n=== Usuarios Atualmente Logados ===" -ForegroundColor Green
         $usuariosLogados = Get-Process -IncludeUserName | Select-Object UserName -Unique
@@ -305,7 +298,6 @@ function Show-UserInfo {
         }
     }
 
-    # Loop do menu
     do {
         Show-Menu
         $choice = Read-Host "Escolha uma opcao (1-8)"
@@ -457,7 +449,7 @@ function Show-Apps {
 function Wmap {
     function Show-Menu {
         Clear-Host
-        Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
+        Write-Host "`n`n`n`n`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Red
         Write-Host "║                                                                              ║" -ForegroundColor Red
         Write-Host "║                                 === WMap ===                                 ║" -ForegroundColor Red
         Write-Host "║                                                                              ║" -ForegroundColor Red
@@ -467,9 +459,13 @@ function Wmap {
         Write-Host "║                                                                              ║" -ForegroundColor Red
         Write-Host "║                 2. Criar Lista de IP                                         ║" -ForegroundColor Red
         Write-Host "║                                                                              ║" -ForegroundColor Red
-        Write-Host "║                 3. Pingar Maq da rede                                        ║" -ForegroundColor Red
+        Write-Host "║                 3. Descobrir Maquinas Ativas de um IP                        ║" -ForegroundColor Red
         Write-Host "║                                                                              ║" -ForegroundColor Red
-        Write-Host "║                 4. Pingar Porta Espcifica ( S/ rastros)                      ║" -ForegroundColor Red
+        Write-Host "║                 4. Pingar Porta Espcifica ( info )                           ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║                 5. Pingar todas as Portas de um ip                           ║" -ForegroundColor Red
+        Write-Host "║                                                                              ║" -ForegroundColor Red
+        Write-Host "║                 6. Pingar 100 portas mais usadas                             ║" -ForegroundColor Red
         Write-Host "║                                                                              ║" -ForegroundColor Red
         Write-Host "║                 0. Menu Principal                                            ║" -ForegroundColor Red
         Write-Host "║                                                                              ║" -ForegroundColor Red
@@ -512,7 +508,7 @@ function Wmap {
 
     function Pingar-Ip-Rede {
         Write-Host "`n"
-        $baseIP = Read-Host "Digite a parte inicial do IP (Ex: 192.168.10.)"
+        $baseIP = Read-Host "Digite a parte inicial do IP (Ex: 192.168.10.) ( esse comando vai pingar todos os endereços de 1 - 254 pode levar até 20 minutos)"
 
         # Verifica se o usuário digitou um valor válido
         if (-not $baseIP.EndsWith(".")) {
@@ -525,7 +521,7 @@ function Wmap {
         # Loop para pingar cada IP na rede
         foreach ($ip in 1..254) {
             $fullIP = "$baseIP$ip" # Concatena a base do IP com o número atual
-            Write-Host "Pingando $fullIP..." -ForegroundColor Cyan
+            Write-Host "`nPingando $fullIP..." -ForegroundColor Cyan
             $result = ping -n 1 $fullIP | Select-String "bytes=32"
 
             # Exibe o resultado do ping
@@ -541,7 +537,7 @@ function Wmap {
 
     function Pingar-Porta-IP {
         Write-Host "`n"
-        $ip = Read-Host "Digite o IP"
+        $ip = Read-Host "Digite o IP (alvo)"
         $porta = Read-Host "Digite a porta"
 
         if (-not $ip -or -not $porta) {
@@ -578,6 +574,82 @@ function Wmap {
         }
     }
 
+    function Validar-IP {
+        param (
+            [string]$ip
+        )
+        # Expressão regular para validar um endereço IPv4
+        $regex = '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+        return ($ip -match $regex)
+    }
+
+    function Pingar-Todas-Portas-Ip {
+        Write-Host "`n"
+        Write-Host "Obs:(Esta acao pode levar alguns minutos:65535 portas)"
+    
+        do {
+            $ip = Read-Host "Digite o IP (alvo)"
+            if (-not (Validar-IP $ip)) {
+                Write-Host "Endereço IP inválido. Tente novamente." -ForegroundColor Red
+                return
+            }
+        } while (-not (Validar-IP $ip))
+    
+        Write-Host "`nIniciando Scan..."
+        $totalPortas = 65535
+        $portasAbertas = @()
+
+        for ($porta = 1; $porta -le $totalPortas; $porta++) {
+            if (Test-NetConnection $ip -Port $porta -WarningAction SilentlyContinue -InformationLevel Quiet) {
+                Write-Host "Porta $porta Aberta" -ForegroundColor Green
+                $portasAbertas += $porta
+            } else {
+                # Write-Host "Porta $porta Fechada" -ForegroundColor Red
+                Continue
+            }
+        }
+
+        Write-Host "Portas abertas: $($portasAbertas -join ', ')"
+    }
+
+    function Pingar-Portas-Comuns-Ip {
+        Write-Host "`n"
+    
+        do {
+            $ip = Read-Host "Digite o IP (alvo)"
+            if (-not (Validar-IP $ip)) {
+                Write-Host "Endereço IP inválido. Tente novamente." -ForegroundColor Red
+                return
+            }
+        } while (-not (Validar-IP $ip))
+    
+        Write-Host "`nIniciando Scan nas 100 portas mais comuns..."
+
+       $portasComuns = @(
+            20, 21, 22, 23, 25, 53, 67, 68, 69, 80, 110, 123, 135, 137, 138, 139, 143, 161, 162, 389, 443, 
+            445, 465, 500, 512, 513, 514, 587, 636, 873, 993, 995, 1025, 1026, 1027, 1028, 1029, 1080, 1194, 
+            1433, 1434, 1701, 1723, 1812, 1813, 1900, 2049, 2181, 2375, 2376, 2483, 2484, 3306, 3389, 3478, 
+            4500, 5000, 5060, 5061, 5353, 5355, 5432, 5555, 5900, 5985, 5986, 6000, 6379, 6667, 7000, 8080, 
+            8081, 8192, 8443, 8888, 9000, 9090, 9100, 9200, 9300, 9418, 9999, 10000, 11211, 25565, 27017, 
+            27018, 27019, 28015, 28017, 31337, 32768, 37777, 49152, 49153, 49154, 49155, 49156, 49157, 
+            49158, 49159, 49160, 49161, 49162, 49163, 49164, 49165
+        )
+
+    
+        $portasAbertas = @()
+
+        foreach ($porta in $portasComuns) {
+            if (Test-NetConnection $ip -Port $porta -WarningAction SilentlyContinue -InformationLevel Quiet) {
+                Write-Host "Porta $porta Aberta" -ForegroundColor Green
+                $portasAbertas += $porta
+            } else {
+                Write-Host "Porta $porta Fechada" -ForegroundColor Red
+            }
+        }
+
+        Write-Host "Portas abertas: $($portasAbertas -join ', ')"
+    }
+
     do {
         Show-Menu
         $choice = Read-Host "Escolha uma opcao (1-0)"
@@ -587,6 +659,8 @@ function Wmap {
             2 { Criar-Lista }
             3 { Pingar-Ip-Rede }
             4 { Pingar-Porta-IP }
+            5 { Pingar-Todas-Portas-Ip }
+            6 { Pingar-Portas-Comuns-Ip }
             0 { Write-Host "Voltando ao menu principal..." -ForegroundColor Yellow; break }
             default { Write-Host "Opcao invalida. Tente novamente." -ForegroundColor Red }
         }
@@ -600,7 +674,7 @@ function Wmap {
 
 while ($true) {
     Clear-Host
-    Write-Host "`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
+    Write-Host "`n`n`n`n`n`n╔══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
     Write-Host "║                                                                              ║" -ForegroundColor Green
     Write-Host "║                          === Menu Principal ===                              ║" -ForegroundColor Green
     Write-Host "║                                                                              ║" -ForegroundColor Green
