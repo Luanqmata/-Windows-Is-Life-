@@ -1,3 +1,11 @@
+function Validar-IP {
+        param (
+            [string]$ip
+        )
+        $regex = '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'
+        return ($ip -match $regex)
+}
+
 function Pingar-Todas-Portas-Ip { # TOP TOP TOP
         Write-Host "`n"
         Write-Host "Obs: Esta acao pode levar alguns minutos (65535 portas)" -ForegroundColor Yellow
