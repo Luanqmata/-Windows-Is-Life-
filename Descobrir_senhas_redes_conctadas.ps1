@@ -1,3 +1,5 @@
+# Colar codigo no powershell diretamente
+
 $profiles = netsh wlan show profiles | Select-String "Todos os Perfis de Usuário|All User Profile"
 
 foreach ($profile in $profiles) {
