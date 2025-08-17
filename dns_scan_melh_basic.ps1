@@ -177,73 +177,73 @@ function Busca-Por-DNS {
     function RunAllScans {
         param ([string]$url)
 
-        Write-Host "`n=== Iniciando todas as verificacoes para a URL: $url ===`n" -ForegroundColor Magenta
+        Write-Host "`n=== Iniciando todas as verificacoes para a URL: $url ===`n" -ForegroundColor Green
 
-        Write-Host "`n=== 1. Captura Headers do Servidor ===" -ForegroundColor Magenta
+        Write-Host "`n=== 1. Captura Headers do Servidor ===" -ForegroundColor Green
         ScanHeaders -url $url
 
-        Write-Host "`n=== 2. Descobre os Metodos HTTP Permitidos ===" -ForegroundColor Magenta
+        Write-Host "`n=== 2. Descobre os Metodos HTTP Permitidos ===" -ForegroundColor Green
         ScanOptions -url $url
 
-        Write-Host "`n=== 3. Lista os Links Encontrados no HTML ===" -ForegroundColor Magenta
+        Write-Host "`n=== 3. Lista os Links Encontrados no HTML ===" -ForegroundColor Green
         ScanLinks -url $url
 
-        Write-Host "`n=== 4. Obtem Codigo-Fonte do HTML ===" -ForegroundColor Magenta
+        Write-Host "`n=== 4. Obtem Codigo-Fonte do HTML ===" -ForegroundColor Green
         ScanHTML -url $url
 
-        Write-Host "`n=== 5. Detecta Tecnologias Utilizadas ===" -ForegroundColor Magenta
+        Write-Host "`n=== 5. Detecta Tecnologias Utilizadas ===" -ForegroundColor Green
         ScanTech -url $url
 
-        Write-Host "`n=== 6. Obtem Codigo de Status HTTP ===" -ForegroundColor Magenta
+        Write-Host "`n=== 6. Obtem Codigo de Status HTTP ===" -ForegroundColor Green
         ScanStatusCode -url $url
 
-        Write-Host "`n=== 7. Obtem o <title> da Pagina ===" -ForegroundColor Magenta
+        Write-Host "`n=== 7. Obtem o <title> da Pagina ===" -ForegroundColor Green
         ScanTitle -url $url
 
-        Write-Host "`n=== 8. Verifica o arquivo robots.txt ===" -ForegroundColor Magenta
+        Write-Host "`n=== 8. Verifica o arquivo robots.txt ===" -ForegroundColor Green
         ScanRobotsTxt -url $url
 
-        Write-Host "`n=== 9. Verifica se o site possui um Sitemap ===" -ForegroundColor Magenta
+        Write-Host "`n=== 9. Verifica se o site possui um Sitemap ===" -ForegroundColor Green
         ScanSitemap -url $url
 
-        Write-Host "`n=== Todas as verificacoes foram concluidas! ===`n" -ForegroundColor Magenta
-        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+        Write-Host "`n=== Todas as verificacoes foram concluidas! ===`n" -ForegroundColor Green
+        Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
         $null = Read-Host
     }
 
     while ($true) {
         Clear-Host
-        Write-Host "`n`n`n`n`n`n+==================================================+" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||         === Menu de busca por DNS ===          ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "+==================================================+" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      1. Captura Headers do Servidor            ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      2. Descobre os Metodos HTTP Permitidos    ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      3. Lista os Links Encontrados no HTML     ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      4. Obtem Codigo-Fonte do HTML             ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      5. Detecta Tecnologias Utilizadas         ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      6. Obtem Codigo de Status HTTP            ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      7. Obtem o <title> da Pagina              ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      8. Verifica o arquivo robots.txt          ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      9. Verifica se o site possui um Sitemap   ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      10. Faz um Scan Rapido das Portas Comuns  ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      11. Rodar todas opcoes (1 a 9)            ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      12. Voltar para o Menu Principal          ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "+==================================================+" -ForegroundColor Magenta
+        Write-Host "`n`n`n`n`n`n+==================================================+" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||         === Menu de busca por DNS ===          ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "+==================================================+" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      1. Captura Headers do Servidor            ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      2. Descobre os Metodos HTTP Permitidos    ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      3. Lista os Links Encontrados no HTML     ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      4. Obtem Codigo-Fonte do HTML             ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      5. Detecta Tecnologias Utilizadas         ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      6. Obtem Codigo de Status HTTP            ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      7. Obtem o <title> da Pagina              ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      8. Verifica o arquivo robots.txt          ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      9. Verifica se o site possui um Sitemap   ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      10. Faz um Scan Rapido das Portas Comuns  ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      11. Rodar todas opcoes (1 a 9)            ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "||      12. Voltar para o Menu Principal          ||" -ForegroundColor Green
+        Write-Host "||                                                ||" -ForegroundColor Green
+        Write-Host "+==================================================+" -ForegroundColor Green
         Write-Host "`n`n"
 
         $opcao = Read-Host "`nEscolha uma opcao (1-12)"
@@ -256,7 +256,7 @@ function Busca-Por-DNS {
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
                 }
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             2 {
@@ -266,7 +266,7 @@ function Busca-Por-DNS {
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
                 }
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             3 {
@@ -276,7 +276,7 @@ function Busca-Por-DNS {
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
                 }
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             4 {
@@ -286,7 +286,7 @@ function Busca-Por-DNS {
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
                 }
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             5 {
@@ -296,7 +296,7 @@ function Busca-Por-DNS {
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
                 }
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             6 {
@@ -306,7 +306,7 @@ function Busca-Por-DNS {
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
                 }
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             7 {
@@ -316,7 +316,7 @@ function Busca-Por-DNS {
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
                 }
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             8 {
@@ -326,7 +326,7 @@ function Busca-Por-DNS {
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
                 }
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             9 {
@@ -336,13 +336,13 @@ function Busca-Por-DNS {
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
                 }
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             10 {
                 $host = Read-Host "`nDigite o host ou IP (ex: exemplo.com ou 192.168.1.1)"
                 ScanPorts -host $host
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
             11 {
@@ -351,21 +351,20 @@ function Busca-Por-DNS {
                     RunAllScans -url $url
                 } else {
                     Write-Host "URL invalida. Deve comecar com http:// ou https://" -ForegroundColor Red
-                    Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                    Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                     $null = Read-Host
                 }
             }
             12 {
-                Write-Host "`nRetornando ao menu principal..." -ForegroundColor Magenta
+                Write-Host "`nRetornando ao menu principal..." -ForegroundColor Green
                 return
             }
             default {
-                Write-Host "`nOpcao invalida. Escolha um numero entre 1 a 12." -ForegroundColor Magenta
-                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
+                Write-Host "`nOpcao invalida. Escolha um numero entre 1 a 12." -ForegroundColor Green
+                Write-Host "`nPressione Enter para continuar..." -ForegroundColor Green
                 $null = Read-Host
             }
         }
     }
 }
-
 Busca-Por-DNS
