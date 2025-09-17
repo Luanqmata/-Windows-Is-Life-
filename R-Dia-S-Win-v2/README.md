@@ -16,15 +16,14 @@
 
 ------
 
-# MELHORIAS NO CODIGO:
+# MELHORIAS NO CÓDIGO:
 
-
-<img width="1920" height="935" alt="image" src="https://github.com/user-attachments/assets/325bb14a-c627-4f4d-a6a4-1dd3644f8fc4" />
-
----
-
-<img width="1599" height="900" alt="image" src="https://github.com/user-attachments/assets/317dd38f-74f8-4bc0-ab84-3ff59723b85e" />
+![image](https://github.com/user-attachments/assets/325bb14a-c627-4f4d-a6a4-1dd3644f8fc4)
 
 ---
 
-<img width="1308" height="683" alt="image" src="https://github.com/user-attachments/assets/78e84d2e-1f7d-4e0a-95a0-2015b7aed564" />
+![image](https://github.com/user-attachments/assets/317dd38f-74f8-4bc0-ab84-3ff59723b85e)
+
+---
+
+![image](https://github.com/user-attachments/assets/78e84d2e-1f7d-4e0a-95a0-2015b7aed564)
