@@ -54,7 +54,7 @@ function Busca-Por-DNS {
                 $response.Headers.Server
                 Write-Log "Server header: $($response.Headers.Server)"
             } else {
-                Write-Host "Header Server não encontrado." -ForegroundColor Yellow
+                Write-Host "Header Server nao encontrado." -ForegroundColor Yellow
             }
         } catch {
             Handle-WebError -ErrorObject $_
@@ -73,7 +73,7 @@ function Busca-Por-DNS {
                 $response.Headers.Allow
                 Write-Log "Métodos permitidos: $($response.Headers.Allow)"
             } else {
-                Write-Host "Nenhum método Allow encontrado nos headers." -ForegroundColor Yellow
+                Write-Host "Nenhum metodo Allow encontrado nos headers." -ForegroundColor Yellow
             }
         } catch {
             Handle-WebError -ErrorObject $_
@@ -212,7 +212,7 @@ function Busca-Por-DNS {
             if ($response.ParsedHtml -and $response.ParsedHtml.title) {
                 Write-Host "`n Titulo da pagina:" -ForegroundColor Green
                 $response.ParsedHtml.title
-                Write-Log "Título da página: $($response.ParsedHtml.title)"
+                Write-Log "Titulo da pagina: $($response.ParsedHtml.title)"
             } else {
                 Write-Host "`nNenhum titulo encontrado." -ForegroundColor Yellow
             }
@@ -233,8 +233,8 @@ function Busca-Por-DNS {
             Write-Host $response.Content
             Write-Log "Robots.txt encontrado e lido com sucesso"
         } catch {
-            Write-Host "`nRobots.txt não encontrado ou erro de acesso." -ForegroundColor Yellow
-            Write-Log "Robots.txt não encontrado: $($_.Exception.Message)" "WARNING"
+            Write-Host "`nRobots.txt nao encontrado ou erro de acesso." -ForegroundColor Yellow
+            Write-Log "Robots.txt nao encontrado: $($_.Exception.Message)" "WARNING"
         }
     }
 
@@ -317,7 +317,7 @@ function Busca-Por-DNS {
         }
         
         Write-Host "`n=== Todas as verificacoes foram concluidas ===`n" -ForegroundColor Magenta
-        Write-Log "RunAllScans concluído para: $url"
+        Write-Log "RunAllScans concluido para: $url"
         Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
         $null = Read-Host
     }
@@ -367,7 +367,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     ScanHeaders -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invalida. Use http:// ou https://" -ForegroundColor Red
                 }
                 Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                 $null = Read-Host
@@ -377,7 +377,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     ScanOptions -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invalida. Use http:// ou https://" -ForegroundColor Red
                 }
                 Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                 $null = Read-Host
@@ -387,7 +387,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     ScanLinks -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invlida. Use http:// ou https://" -ForegroundColor Red
                 }
                 Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                 $null = Read-Host
@@ -397,7 +397,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     ScanHTML -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invalida. Use http:// ou https://" -ForegroundColor Red
                 }
                 Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                 $null = Read-Host
@@ -407,7 +407,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     ScanTech -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invalida. Use http:// ou https://" -ForegroundColor Red
                 }
                 Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                 $null = Read-Host
@@ -417,7 +417,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     ScanStatusCode -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invalida. Use http:// ou https://" -ForegroundColor Red
                 }
                 Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                 $null = Read-Host
@@ -427,7 +427,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     ScanTitle -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invalida. Use http:// ou https://" -ForegroundColor Red
                 }
                 Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                 $null = Read-Host
@@ -437,7 +437,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     ScanRobotsTxt -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invalida. Use http:// ou https://" -ForegroundColor Red
                 }
                 Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                 $null = Read-Host
@@ -447,7 +447,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     ScanSitemap -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invalida. Use http:// ou https://" -ForegroundColor Red
                 }
                 Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                 $null = Read-Host
@@ -463,7 +463,7 @@ function Busca-Por-DNS {
                 if (Test-ValidUrl $url) {
                     RunAllScans -url $url
                 } else {
-                    Write-Host "URL inválida. Use http:// ou https://" -ForegroundColor Red
+                    Write-Host "URL invalida. Use http:// ou https://" -ForegroundColor Red
                     Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
                     $null = Read-Host
                 }
