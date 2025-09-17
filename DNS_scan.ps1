@@ -5,7 +5,6 @@ function Busca-Por-DNS {
 
     $logFile = "scan_log_$(Get-Date -Format 'yyyyMMdd_HHmmss').txt"
 
-    # === Funções Auxiliares ===
     function Write-Log {
         param ([string]$message, [string]$level = "INFO")
         $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -41,7 +40,6 @@ function Busca-Por-DNS {
         return Invoke-WebRequest -Uri $Uri -Method $Method -Headers $headers -ErrorAction Stop -TimeoutSec $Timeout
     }
     
-    # === Funções de Scan ===
     function ScanHeaders {
         param ([string]$url)
         try {
@@ -112,13 +110,11 @@ function Busca-Por-DNS {
             $response = Invoke-WebRequestSafe -Uri $url
             $htmlContent = $response.Content
             
-            # Extrair palavras com regex melhorada
             $palavras = $htmlContent -split '[^\p{L}0-9_\-]+' | 
                        Where-Object { $_.Length -gt 2 -and -not $_.StartsWith('#') -and -not $_.StartsWith('//') } | 
                        Select-Object -Unique |
                        Sort-Object
             
-            # Filtrar palavras comuns
             $commonWords = @('the', 'and', 'for', 'you', 'your', 'this', 'that', 'with', 'have', 'from')
             $palavras = $palavras | Where-Object { $commonWords -notcontains $_.ToLower() }
             
@@ -126,7 +122,6 @@ function Busca-Por-DNS {
             Write-Log "Encontradas $($palavras.Count) palavras unicas para fuzzing"
             
             if ($palavras.Count -gt 0) {                
-                # Mostrar exemplos
                 Write-Host "`nExemplo de palavras encontradas (primeiras 10):" -ForegroundColor Yellow
                 $palavras | Select-Object -First 10 | ForEach-Object {
                     Write-Host "  $_" -ForegroundColor White
@@ -322,40 +317,28 @@ function Busca-Por-DNS {
         $null = Read-Host
     }
 
-    # === Menu Principal ===
     while ($true) {
+        $cor = "Magenta"
         Clear-Host
-        Write-Host "+==================================================+" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||         === Menu de busca por DNS ===          ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "+==================================================+" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      1. Captura Headers do Servidor            ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      2. Descobre os Metodos HTTP Permitidos    ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      3. Lista os Links Encontrados no HTML     ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      4. Obtem todas Palavras do site           ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      5. Detecta Tecnologias Utilizadas         ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      6. Obtem Codigo de Status HTTP            ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      7. Obtem o <title> da Pagina              ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      8. Verifica o arquivo robots.txt          ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      9. Verifica se o site possui um Sitemap   ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      10. Faz um Scan Rapido das Portas Comuns  ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      11. Rodar todas opcoes (1 a 9)            ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "||      12. Sair                                  ||" -ForegroundColor Magenta
-        Write-Host "||                                                ||" -ForegroundColor Magenta
-        Write-Host "+==================================================+" -ForegroundColor Magenta
+        Write-Host "+==================================================+" -ForegroundColor $cor
+        Write-Host "||                                                ||" -ForegroundColor $cor
+        Write-Host "||            === MENU DE BUSCA POR DNS ===       ||" -ForegroundColor $cor
+        Write-Host "||                                                ||" -ForegroundColor $cor
+        Write-Host "+==================================================+" -ForegroundColor $cor
+        Write-Host "||   1. Captura Headers do Servidor               ||" -ForegroundColor $cor
+        Write-Host "||   2. Descobre os Metodos HTTP Permitidos       ||" -ForegroundColor $cor
+        Write-Host "||   3. Lista os Links Encontrados no HTML        ||" -ForegroundColor $cor
+        Write-Host "||   4. Obtem todas Palavras do site              ||" -ForegroundColor $cor
+        Write-Host "||   5. Detecta Tecnologias Utilizadas            ||" -ForegroundColor $cor
+        Write-Host "||   6. Obtem Codigo de Status HTTP               ||" -ForegroundColor $cor
+        Write-Host "||   7. Obtem o <title> da Pagina                 ||" -ForegroundColor $cor
+        Write-Host "||   8. Verifica o arquivo robots.txt             ||" -ForegroundColor $cor
+        Write-Host "||   9. Verifica se o site possui um Sitemap      ||" -ForegroundColor $cor
+        Write-Host "||  10. Faz um Scan Rapido das Portas Comuns      ||" -ForegroundColor $cor
+        Write-Host "||  11. Rodar todas opcoes (1 a 9)                ||" -ForegroundColor $cor
+        Write-Host "||  12. Sair                                      ||" -ForegroundColor $cor
+
+        Write-Host "+==================================================+" -ForegroundColor $cor
         Write-Host "`nLog sendo salvo em: $logFile" -ForegroundColor Gray
         Write-Host "`n`n"
 
@@ -482,5 +465,4 @@ function Busca-Por-DNS {
     }
 }
 
-# Iniciar a função
 Busca-Por-DNS
