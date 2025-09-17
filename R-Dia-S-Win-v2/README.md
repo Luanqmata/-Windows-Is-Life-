@@ -8,8 +8,6 @@
 ------
 ![image](https://github.com/user-attachments/assets/5a2c2260-bcd3-419f-89be-b84539a555b1)
 ------
-![image](https://github.com/user-attachments/assets/2fd678f4-8bb9-47ff-a8ba-5e26521a3509)
-------
 # MELHORIAS NO CODIGO:
 
 
