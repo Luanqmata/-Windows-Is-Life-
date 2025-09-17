@@ -1,34 +1,4 @@
-function ScanServidor {
-    $url = Read-Host "Digite a URL do site para scan (ex: http://scanme.org)"
 
-    try {
-        $headers = @{
-            "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36"
-        }
-
-        $web = Invoke-WebRequest -Uri $url -Method Options -Headers $headers -ErrorAction Stop
-
-        Write-Host "`nO servidor roda: "
-        $web.Headers.Server
-        Write-Host ""
-
-        Write-Host "O servidor aceita os métodos: "
-        $web.Headers.Allow
-        Write-Host ""
-
-        Write-Host "Links encontrados: "
-        $web2 = Invoke-WebRequest -Uri $url -Headers $headers -ErrorAction Stop
-        $web2.Links.Href | Select-String http
-    }
-    catch {
-        Write-Host "Erro ao conectar-se ao servidor: $_" -ForegroundColor Red
-    }
-}
-
-ScanServidor
-
-
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 function Busca-Por-DNS {
         $headers = @{
             "User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.0.0 Safari/537.36"
@@ -42,25 +12,25 @@ function Busca-Por-DNS {
                 $response = Invoke-WebRequest -Uri $url -Method Head -Headers $headers -ErrorAction Stop
                 Write-Host "`n O servidor roda:" -ForegroundColor Green
                 $response.Headers.Server
-            } catch {
-                Write-Host "`nErro ao buscar headers: $_" -ForegroundColor Red
-            }
+        } catch {
+            Write-Host "`nErro ao buscar headers: $_" -ForegroundColor Red
         }
+    }
 
-        function ScanOptions {
-            param ([string]$url)
-            try {
-                Write-Host "`n Verificando metodos HTTP suportados..." -ForegroundColor Cyan
-                $response = Invoke-WebRequest -Uri $url -Method Options -Headers $headers -ErrorAction Stop
-                Write-Host "`n Metodos permitidos pelo servidor:" -ForegroundColor Green
-                $response.Headers.Allow
-            } catch {
-                Write-Host "`nErro ao buscar metodos OPTIONS: $_" -ForegroundColor Red
-            }
+    function ScanOptions {
+        param ([string]$url)
+        try {
+            Write-Host "`n Verificando metodos HTTP suportados..." -ForegroundColor Cyan
+            $response = Invoke-WebRequest -Uri $url -Method Options -Headers $headers -ErrorAction Stop
+            Write-Host "`n Metodos permitidos pelo servidor:" -ForegroundColor Green
+            $response.Headers.Allow
+        } catch {
+            Write-Host "`nErro ao buscar metodos OPTIONS: $_" -ForegroundColor Red
         }
+    }
 
-        function ScanLinks {
-            param ([string]$url)
+    function ScanLinks {
+        param ([string]$url)
             try {
                 Write-Host "`n Procurando links na pagina..." -ForegroundColor Cyan
                 $response = Invoke-WebRequest -Uri $url -Headers $headers -ErrorAction Stop
@@ -71,17 +41,43 @@ function Busca-Por-DNS {
             }
         }
 
-        function ScanHTML {
-            param ([string]$url)
-            try {
-                Write-Host "`n Obtendo codigo-fonte do HTML..." -ForegroundColor Cyan
-                $response = Invoke-WebRequest -Uri $url -Headers $headers -ErrorAction Stop
-                Write-Host "`n Codigo HTML recebido:" -ForegroundColor Green
-                Write-Host $response.Content.Substring(0, 500) # Exibe os primeiros 500 caracteres
-            } catch {
-                Write-Host "`nErro ao obter o HTML: $_" -ForegroundColor Red
+       function ScanHTML {
+        param ([string]$url)
+        try {
+            Write-Host "`n Obtendo Palavras do codigo-fonte do HTML..." -ForegroundColor Cyan
+            Sleep -Seconds 2
+            ############# Coletando palavras do HTML para fuzzing #############
+
+            $response = Invoke-WebRequest -Uri $url -Headers $headers -ErrorAction Stop
+            
+            $htmlContent = $response.Content
+            $palavras = $htmlContent -split '\W+' | Where-Object { $_.Length -gt 2 } | Select-Object -Unique
+            
+            Write-Host "`nTotal de palavras unicas encontradas: $($palavras.Count)" -ForegroundColor Cyan
+            
+            if ($palavras.Count -gt 0) {                
+            # Perguntar se quer salvar as palavras em um arquivo
+                $salvar = Read-Host "`nDeseja salvar as palavras em um arquivo para fuzzing? (S/N)"
+                if ($salvar -eq 'S' -or $salvar -eq 's') {
+                    $caminhoArquivo = Read-Host "`nDigite o nome do arquivo (padrao: palavras_fuzzing.txt)"
+                    if ([string]::IsNullOrEmpty($caminhoArquivo)) {
+                        $caminhoArquivo = "palavras_fuzzing.txt"
+                    }
+                    $palavras | Out-File -FilePath $caminhoArquivo -Encoding UTF8
+                    Write-Host "`nPalavras salvas em: $caminhoArquivo" -ForegroundColor Green
+                }
+            } else {
+                Write-Host "`nNenhuma palavra relevante foi encontrada no HTML." -ForegroundColor Yellow
             }
+            
+            # Retornar as palavras para uso futuro
+            return $palavras
+            
+        } catch {
+            Write-Host "`nErro ao obter o HTML: $_" -ForegroundColor Red
+            return @()
         }
+    }
 
         function ScanTech {
             param ([string]$url)
@@ -171,7 +167,7 @@ function Busca-Por-DNS {
         
         function RunAllScans {
             param ([string]$url)
-
+            clear-host
             Write-Host "`n=== Iniciando todas as verificacoes para a URL: $url ===`n" -ForegroundColor Magenta
 
             Write-Host "`n=== 1. Captura Headers do Servidor ===" -ForegroundColor Magenta
@@ -183,32 +179,32 @@ function Busca-Por-DNS {
             Write-Host "`n=== 3. Lista os Links Encontrados no HTML ===" -ForegroundColor Magenta
             ScanLinks -url $url
 
-            Write-Host "`n=== 4. Obtem Codigo-Fonte do HTML ===" -ForegroundColor Magenta
-            ScanHTML -url $url
-
-            Write-Host "`n=== 5. Detecta Tecnologias Utilizadas ===" -ForegroundColor Magenta
+            Write-Host "`n=== 4. Detecta Tecnologias Utilizadas ===" -ForegroundColor Magenta
             ScanTech -url $url
 
-            Write-Host "`n=== 6. Obtem Codigo de Status HTTP ===" -ForegroundColor Magenta
+            Write-Host "`n=== 5. Obtem Codigo de Status HTTP ===" -ForegroundColor Magenta
             ScanStatusCode -url $url
 
-            Write-Host "`n=== 7. Obtem o <title> da Pagina ===" -ForegroundColor Magenta
+            Write-Host "`n=== 6. Obtem o <title> da Pagina ===" -ForegroundColor Magenta
             ScanTitle -url $url
 
-            Write-Host "`n=== 8. Verifica o arquivo robots.txt ===" -ForegroundColor Magenta
+            Write-Host "`n=== 7. Verifica o arquivo robots.txt ===" -ForegroundColor Magenta
             ScanRobotsTxt -url $url
 
-            Write-Host "`n=== 9. Verifica se o site possui um Sitemap ===" -ForegroundColor Magenta
+            Write-Host "`n=== 8. Verifica se o site possui um Sitemap ===" -ForegroundColor Magenta
             ScanSitemap -url $url
 
-            Write-Host "`n=== Todas as verificacoes foram conclui­das! ===`n" -ForegroundColor Magenta
+            Write-Host "`n=== 9. Obtem Codigo-Fonte do HTML ===" -ForegroundColor Magenta
+            ScanHTML -url $url
+
+            Write-Host "`n=== Todas as verificacoes foram concluidas ===`n" -ForegroundColor Magenta
             Write-Host "`nPressione Enter para continuar..." -ForegroundColor Magenta
             $null = Read-Host
         }
 
         while ($true) {
             Clear-Host
-            Write-Host "`n`n`n`n`n`n+==================================================+" -ForegroundColor Magenta
+            Write-Host "+==================================================+" -ForegroundColor Magenta
             Write-Host "||                                                ||" -ForegroundColor Magenta
             Write-Host "||         === Menu de busca por DNS ===          ||" -ForegroundColor Magenta
             Write-Host "||                                                ||" -ForegroundColor Magenta
@@ -220,7 +216,7 @@ function Busca-Por-DNS {
             Write-Host "||                                                ||" -ForegroundColor Magenta
             Write-Host "||      3. Lista os Links Encontrados no HTML     ||" -ForegroundColor Magenta
             Write-Host "||                                                ||" -ForegroundColor Magenta
-            Write-Host "||      4. Obtem Codigo-Fonte do HTML             ||" -ForegroundColor Magenta
+            Write-Host "||      4. Obtem todas Palavras do site           ||" -ForegroundColor Magenta
             Write-Host "||                                                ||" -ForegroundColor Magenta
             Write-Host "||      5. Detecta Tecnologias Utilizadas         ||" -ForegroundColor Magenta
             Write-Host "||                                                ||" -ForegroundColor Magenta
@@ -321,4 +317,4 @@ function Busca-Por-DNS {
         }
 
 }
-    
+Busca-Por-DNS
