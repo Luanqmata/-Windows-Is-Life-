@@ -337,7 +337,6 @@ function Busca-Por-DNS {
         Write-Host "||  10. Faz um Scan Rapido das Portas Comuns      ||" -ForegroundColor $cor
         Write-Host "||  11. Rodar todas opcoes (1 a 9)                ||" -ForegroundColor $cor
         Write-Host "||  12. Sair                                      ||" -ForegroundColor $cor
-
         Write-Host "+==================================================+" -ForegroundColor $cor
         Write-Host "`nLog sendo salvo em: $logFile" -ForegroundColor Gray
         Write-Host "`n`n"
