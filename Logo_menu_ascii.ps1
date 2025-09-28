@@ -20,3 +20,5 @@ function Logo_Menu {
 }
 
 Logo_Menu -Color Yellow
+
+# (letras)https://github.com/EliteLoser/WriteAscii/blob/master/letters.xml
