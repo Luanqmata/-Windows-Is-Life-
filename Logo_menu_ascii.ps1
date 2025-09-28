@@ -25,3 +25,5 @@ function Logo_Menu {
 }
 
 Logo_Menu -Color Red
+
+# https://github.com/EliteLoser/WriteAscii/blob/master/letters.xml
