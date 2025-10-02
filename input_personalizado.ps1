@@ -1,3 +1,4 @@
+
 function Show-InputPrompt {
     param(
         [string]$User = $env:USERNAME,
@@ -6,19 +7,29 @@ function Show-InputPrompt {
     
     $version = [System.Environment]::OSVersion.Version.ToString()
 
-    $inputView = @"
-             /----[ $User@Win= $version ]-[~]---[#]  -  $input_name
-            /___ - :
-"@
+    Write-Host "`n`n               //~--~( " -NoNewline -ForegroundColor Red
+    Write-Host "$User" -NoNewline -ForegroundColor Gray
+    Write-Host "@Win_Version=" -NoNewline -ForegroundColor Cyan
+    Write-Host "/$version/" -NoNewline -ForegroundColor Yellow
+    Write-Host " )-[" -NoNewline -ForegroundColor Red
+    Write-Host "~" -NoNewline -ForegroundColor White
+    Write-Host "]--[" -NoNewline -ForegroundColor Red
+    Write-Host "#" -NoNewline -ForegroundColor White
+    Write-Host "]---> " -NoNewline -ForegroundColor Red
+    Write-Host "$input_name" -ForegroundColor White
+    # linha inferior
+    Write-Host "              /__~----~" -NoNewline -ForegroundColor Red
+    Write-Host " > " -NoNewline -ForegroundColor Red
+    Write-Host "@: " -NoNewline -ForegroundColor White
 
-    $lines = $inputView -split "`n"
+    # Entrada do usuário em magenta
+    $origColor = [Console]::ForegroundColor
+    [Console]::ForegroundColor = "Magenta"
+    $option = Read-Host
+    [Console]::ForegroundColor = $origColor
     
-    Write-Host $lines[0] -ForegroundColor Red
-    Write-Host $lines[1] -NoNewline -ForegroundColor Red
-    
-    return Read-Host
+    return $option
 }
-
 # Uso
 $comando = Show-InputPrompt -input_name "Choose an option (1-12)"
 
