@@ -37,34 +37,39 @@ function Handle-WebError {
 # -------------------------
 # Função atualizada: ScanStatusCode
 # -------------------------
-function ScanStatusCode {
-    param ([String]$url)
+function Get-ip-from-url {
+    param (
+        [Parameter(Mandatory=$true)]
+        [String]$url
+    )
+
     try {
-        Write-Host "`n Obtaining HTTP status code..." -ForegroundColor Yellow
-        Write-Log "Starting ScanStatusCode for: $url"
+        Write-Host "`n Searching for IP DNS ..." -ForegroundColor Yellow
+        Write-Log "Starting Get-ip-from-url for: $url"
 
-        $response = Invoke-WebRequestSafe -Uri $url
-
-        Write-Host "`nStatus Code:" -ForegroundColor Green
-        $response.StatusCode
-        Write-Log "Status Code: $($response.StatusCode)"
-
-
-        Write-Host "`n Obtaining IP address..." -ForegroundColor Yellow
-        Write-Log "Starting ScanIpAddr for: $url"
-        # --- NOVO: Resolve IP do domínio ---
         $domain = ($url -replace '^https?://', '') -replace '/.*$', ''
-        $r = Resolve-DnsName -Name $domain -Type A
+        
+        $results = Resolve-DnsName -Name $domain -Type A -ErrorAction Stop
+        
         Write-Host "`nIP Address(es):" -ForegroundColor Green
-        $r.IpAddress
-        Write-Log "Resolved IPs: $($r.IpAddress -join ', ')"
+        $results | ForEach-Object { 
+            Write-Host "$($_.IPAddress)" -ForegroundColor White
+        }
 
-    } catch {
-        Handle-WebError -ErrorObject $_
+        Write-Log "Successfully resolved $domain to: $($results.IPAddress -join ', ')"
+
+        Read-Host "`nPressione Enter para continuar..."
+    }
+    catch {
+        Write-Host "`nErro ao resolver DNS para: $url" -ForegroundColor Red
+        Write-Host "Detalhes: $($_.Exception.Message)" -ForegroundColor DarkRed
+        Write-Log "DNS Resolution Error for $url : $($_.Exception.Message)" "ERROR"
+        
     }
 }
-
 # -------------------------
 # Chamada correta da função
 # -------------------------
-ScanStatusCode -url 'http://scanme.nmap.org'
+
+Get-ip-from-url -url 'http://scanme.nmap.org'
+
