@@ -1,0 +1,36 @@
+Listar usuarios que estao no wifi :
+
+verificar se o wifi possiu modo monitor: netsh wlan show all
+
+Get-NetUser | select cn
+Get-DomainPolicy
+(Get-DomainPolicy)."KerberosPolicy"
+Get-NetDomainController
+
+--
+
+netsh wlan show profile name="psykovisk 5G - NEXO TELECOM 2" key=clear
+--
+# wi-spy.ps1 - Versão baseada no wlanreport
+
+Write-Host "=== WI-SPY NETWORK ANALYZER ===" -ForegroundColor Cyan
+
+# 1. Mostrar informações do adaptador
+Write-Host "`n[ADAPTADOR]" -ForegroundColor Yellow
+netsh wlan show interfaces | Select-String "Nome|SSID|Sinal|Taxa"
+
+# 2. Mostrar roteador
+Write-Host "`n[ROTEADOR]" -ForegroundColor Yellow
+$bssid = (netsh wlan show interfaces | Select-String "BSSID").ToString().Split(":")[1].Trim()
+Write-Host "MAC do Roteador: $bssid"
+
+# 3. Mostrar dispositivos na rede
+Write-Host "`n[DISPOSITIVOS NA REDE]" -ForegroundColor Yellow
+arp -a | Select-String "192.168.100"
+
+# 4. Gerar relatório e abrir no navegador
+Write-Host "`n[GERANDO RELATORIO]" -ForegroundColor Yellow
+netsh wlan show wlanreport
+Start-Process "C:\ProgramData\Microsoft\Windows\WlanReport\wlan-report-latest.html"
+
+Write-Host "`n[PRONTO!]" -ForegroundColor Green
